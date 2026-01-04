@@ -5,6 +5,7 @@ import com.example.accounts.api.constants.AccountContants;
 import com.example.accounts.api.dto.CustomerDto;
 import com.example.accounts.api.dto.ResponseDto;
 import com.example.accounts.api.repository.AccountsRepository;
+import com.example.accounts.api.service.IAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,14 +18,21 @@ import org.springframework.web.bind.annotation.*;
 public class AccountsController {
 
 
-    private AccountsRepository accountsRepository;
+    private IAccountService iAccountService;
 
         @PostMapping("/create")
     public ResponseEntity<ResponseDto>createAccount(@RequestBody CustomerDto customerDto){
 
-            System.out.println(customerDto);
+            iAccountService.createAccount(customerDto);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ResponseDto(AccountContants.STATUS_201,AccountContants.MESSAGE_201));
+    }
+
+    @GetMapping("/fetch")
+    public ResponseEntity<CustomerDto> fatchAccountDetails(@RequestParam String mobileNumber){
+
+        CustomerDto customerDto = iAccountService.fetchAccount(mobileNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }
 
 }
